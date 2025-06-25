@@ -37,4 +37,10 @@ Use the username: **user** and password: **bitnami** to log in.
 
 ### Other script scenarios:
 
-1. You can spin up 2 scripts at once, a 
+A: 1 sender and 1 consumer (just sends/consumes 1 message): sender.py & receiver.py
+
+B: 1 consumer always listening: message_consumer.py
+
+C: 1 sender, you can configure it to send as many messages as you want: load_test.py
+
+
