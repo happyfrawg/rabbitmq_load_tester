@@ -1,0 +1,63 @@
+name: Async RabbitMQ Load Test
+
+on:
+  # Run anytime you push to main (adjust as needed)
+  push:
+    branches: [ main ]
+  # Allow manual triggers from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  load-test:
+    runs-on: ubuntu-latest
+
+    # Spin up RabbitMQ as a Docker “service”
+    services:
+      rabbitmq:
+        image: rabbitmq:3-management
+        # Same credentials your scripts use
+        env:
+          RABBITMQ_DEFAULT_USER: user
+          RABBITMQ_DEFAULT_PASS: bitnami
+        ports:
+          - 5672:5672
+          - 15672:15672  # management UI (optional)
+        # Wait for the broker to be ready
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      # 1. Check out repository
+      - uses: actions/checkout@v4
+
+      # 2. Set up the exact Python version you want
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"   # or 3.9 / 3.10—anything >= 3.9
+
+      # 3. Install requirements
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Run the async load-test script
+      #
+      #    ⚠️  async_load_test_x_value.py defaults to 1 000 000 messages.
+      #       That will easily finish within the GitHub-Actions 6-hour limit,
+      #       but you can shorten the run by exporting TOTAL_MSGS, which the
+      #       script already checks for:
+      #
+      #         env:
+      #           TOTAL_MSGS: 10000
+      #
+      #       (uncomment the env: block below if you added that env-var logic)
+      #
+      - name: Run async_load_test_x_value.py
+        # env:
+        #   TOTAL_MSGS: "10000"
+        run: python async_load_test_x_value.py
