@@ -44,3 +44,30 @@ B: 1 consumer always listening: message_consumer.py
 C: 1 sender, you can configure it to send as many messages as you want: load_test.py
 
 
+### Using the HELM chart:
+
+1. Navigate to the directory containing the chart: 
+```
+cd helm
+```
+
+2. Install the Helm chart into your local Kubernetes cluster:
+```
+helm install rabbitmq . --namespace default
+```
+
+3. Verify the deployment:
+```
+kubectl get pods,svc
+```
+
+4. Access the RabbitMQ management console by enabling port forwarding and navigating to: 
+```
+kubectl port-forward svc/rabbitmq 15672:15672
+```
+
+5. Access the AMQP Port by enabling port forwarding:
+```
+kubectl port-forward svc/rabbitmq 5672:5672
+```
+

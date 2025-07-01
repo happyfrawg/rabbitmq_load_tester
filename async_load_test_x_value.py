@@ -15,7 +15,7 @@ from aio_pika import RobustConnection, Message, Channel, Queue
 RABBIT_URL   = "amqp://user:bitnami@localhost/"
 QUEUE_NAME   = "test_queue"
 STOP_MESSAGE = "STOP_MESSAGE"
-TOTAL_MSGS   = 1_000_0
+TOTAL_MSGS   = 1_000_00
 PROGRESS_EVERY = 100      # how often to show progress
 # ---------------------------------------------------------------------
 
